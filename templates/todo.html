@@ -33,16 +33,19 @@
       border-radius: 5px;
     }
     button {
-      padding: 10px 20px;
+      margin : 10 px !important ;
+      /* padding: 10; */
       font-size: 16px;
       cursor: pointer;
+      width: 30px;
+      height: 30px;
       border: none;
-      border-radius: 5px;
-      background-color: #4effff;
-      color: #000;
+      border-radius: 50px;
+      background-color: #4effff00;
+      color: #a39797;
     }
     button:hover {
-      background-color: #00ffe0;
+      background-color: #b97aa5;
     }
     .completed {
       text-decoration: line-through;
@@ -54,7 +57,8 @@
   <h1>To-Do List</h1>
   <div id="todo-container">
     <input type="text" id="new-task" placeholder="Add a new task..." />
-    <button id="add-task">Add</button>
+    <br>
+    <button id="add-task">+</button>
     <ul id="task-list"></ul>
   </div>
 
