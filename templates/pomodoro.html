@@ -61,12 +61,12 @@
     }
 
     function pause_timer() {
-      clear_interval(time_interval);
+      clearInterval(time_interval);
       is_running = false;
     }
 
     function reset_timer() {
-      clear_interval(time_interval);
+      clearInterval(time_interval);
       is_running = false;
       timeLeft = 25 * 60;
       update_timer_display();
