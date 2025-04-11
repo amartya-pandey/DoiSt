@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Write Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header><h1>Write a New Blog</h1></header>
+  <main class="single-post">
+    <form id="blog-form">
+      <input type="text" id="title" placeholder="Title" required />
+      <textarea id="content" rows="10" placeholder="Your blog content..." required></textarea>
+      <input type="text" id="category" placeholder="Category" />
+      <input type="file" id="upload-file" accept=".txt,.md" />
+      <button type="submit">Publish</button>
+    </form>
+  </main>
+  <footer><p>© 2025 My Blog</p></footer>
+  <script src="/static/write.js"></script>
+</body>
+</html>
