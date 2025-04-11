@@ -33,50 +33,50 @@
   <script>
     let time_interval;
     let timeLeft = 25 * 60; 
-    let isRunning = false;
+    let is_running = false;
 
     const timer_display = document.getElementById('timer');
     const start_button = document.getElementById('start');
     const pause_button = document.getElementById('pause');
-    const resetButton = document.getElementById('reset');
+    const reset_button = document.getElementById('reset');
 
-    function updateTimerDisplay() {
+    function update_timer_display() {
       const minutes = Math.floor(timeLeft / 60);
       const seconds = timeLeft % 60;
       timer_display.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
 
-    function startTimer() {
-      if (isRunning) return;
-      isRunning = true;
-      time_interval = setInterval(() => {
+    function start_timer() {
+      if (is_running) return;
+      is_running = true;
+      time_interval = set_interval(() => {
         if (timeLeft > 0) {
           timeLeft--;
-          updateTimerDisplay();
+          update_timer_display();
         } else {
-          clearInterval(time_interval);
+          clear_interval(time_interval);
           alert('Time is up!');
         }
       }, 1000);
     }
 
-    function pauseTimer() {
-      clearInterval(time_interval);
-      isRunning = false;
+    function pause_timer() {
+      clear_interval(time_interval);
+      is_running = false;
     }
 
-    function resetTimer() {
-      clearInterval(time_interval);
-      isRunning = false;
+    function reset_timer() {
+      clear_interval(time_interval);
+      is_running = false;
       timeLeft = 25 * 60;
-      updateTimerDisplay();
+      update_timer_display();
     }
 
-    start_button.addEventListener('click', startTimer);
-    pause_button.addEventListener('click', pauseTimer);
-    resetButton.addEventListener('click', resetTimer);
+    start_button.addEventListener('click', start_timer);
+    pause_button.addEventListener('click', pause_timer);
+    reset_button.addEventListener('click', reset_timer);
 
-    updateTimerDisplay();
+    update_timer_display();
   </script>
 </body>
 </html>
