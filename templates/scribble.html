@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>Scribble Pad</title>
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -32,18 +32,48 @@
     button:hover {
       background-color: #00ffe0;
     }
+    #colorPickerContainer {
+      margin: 20px auto;
+    }
   </style>
 </head>
 <body>
   <h3 style="color: #33635d;">jU$t 5cr!bb|e your w@y through @by55...</h3>
   <canvas id="scribbleCanvas" width="1100vh" height="500vh"></canvas>
   <br />
+  <div id="colorPickerContainer"></div>
   <button id="clearCanvas">Clear</button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
   <script>
     const canvas = document.getElementById('scribbleCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
+    let currentColor = '#ffffff'; 
+    const pickr = Pickr.create({
+      el: '#colorPickerContainer',
+      theme: 'nano', 
+      default: currentColor,
+      swatches: [
+        '#4effff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#000000', '#ffffff'
+      ],
+      components: {
+        preview: true,
+        opacity: true,
+        hue: true,
+        interaction: {
+          hex: true,
+          rgba: true,
+          input: true,
+          save: true
+        }
+      }
+    });
+
+    // Updates the current color when the color picker changes
+    pickr.on('change', (color) => {
+      currentColor = color.toHEXA().toString(); // Get the selected color as a hex string
+    });
 
     canvas.addEventListener('mousedown', (e) => {
       isDrawing = true;
@@ -54,7 +84,7 @@
     canvas.addEventListener('mousemove', (e) => {
       if (isDrawing) {
         ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.strokeStyle = '#4effff';
+        ctx.strokeStyle = currentColor; // Uses the selected color
         ctx.lineWidth = 2;
         ctx.stroke();
       }
