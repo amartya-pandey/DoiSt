@@ -21,10 +21,17 @@
       margin: 5px;
       cursor: pointer;
     }
+    #time-input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px auto;
+      display: block;
+    }
   </style>
 </head>
 <body>
   <!-- <h1>Pomodoro Timer</h1> -->
+  <input id="time-input" type="number" placeholder="Enter minutes" min="1" />
   <div id="timer" style="color: darkgrey;">25 : 00</div>
   <button id="start">Start</button>
   <button id="pause">Pause</button>
@@ -36,6 +43,7 @@
     let is_running = false;
 
     const timer_display = document.getElementById('timer');
+    const time_input = document.getElementById('time-input');
     const start_button = document.getElementById('start');
     const pause_button = document.getElementById('pause');
     const reset_button = document.getElementById('reset');
@@ -48,13 +56,22 @@
 
     function start_timer() {
       if (is_running) return;
+
+      const input_minutes = parseInt(time_input.value);
+      if (!isNaN(input_minutes) && input_minutes > 0) {
+        timeLeft = input_minutes * 60;
+      }
+
+      time_input.style.display = 'none';
+
       is_running = true;
+      update_timer_display();
       time_interval = setInterval(() => {
         if (timeLeft > 0) {
           timeLeft--;
           update_timer_display();
         } else {
-          clear_interval(time_interval);
+          clearInterval(time_interval);
           alert('Time is up!');
         }
       }, 1000);
@@ -70,6 +87,8 @@
       is_running = false;
       timeLeft = 25 * 60;
       update_timer_display();
+
+      time_input.style.display = 'block';
     }
 
     start_button.addEventListener('click', start_timer);
