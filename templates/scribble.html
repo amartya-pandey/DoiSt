@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Scribble Pad</title>
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="../static/style/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
   <style>
     body {
@@ -14,7 +14,7 @@
     }
 
     canvas {
-      border: 2px solid #4effff;
+      border: 2px solid #0f5e5e;
       border-radius: 10px;
       cursor: crosshair;
       background-color: #140f16;
@@ -26,7 +26,7 @@
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background-color: #4effff;
+      background-color: #478d8d;
       color: #000;
     }
     button:hover {
@@ -38,18 +38,28 @@
   </style>
 </head>
 <body>
+  <header>
+    <h1>Hello husssler...</h1>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+    </nav>
+  </header>
   <h3 style="color: #33635d;">jU$t 5cr!bb|e your w@y through @by55...</h3>
-  <canvas id="scribbleCanvas" width="1100vh" height="500vh"></canvas>
+  <canvas id="scribbleCanvas" width="1400vh" height="800vh"></canvas>
   <br />
   <div id="colorPickerContainer"></div>
   <button id="clearCanvas">Clear</button>
+  <button id="save-scribble">Save</button> <!-- Save button -->
 
   <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
   <script>
     const canvas = document.getElementById('scribbleCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
-    let currentColor = '#ffffff'; 
+    let currentColor = '#6a5acd'; 
     const pickr = Pickr.create({
       el: '#colorPickerContainer',
       theme: 'nano', 
@@ -102,6 +112,29 @@
     document.getElementById('clearCanvas').addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
+
+    const saveButton = document.getElementById("save-scribble");
+saveButton.addEventListener("click", () => {
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+
+  // Fill the background with black
+  tempCtx.fillStyle = "#000000";
+  tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+  // Draw the original canvas content on top
+  tempCtx.drawImage(canvas, 0, 0);
+
+  // Save the combined canvas as a JPG
+  const dataURL = tempCanvas.toDataURL("image/jpeg", 1.0); // High-quality JPG
+  const link = document.createElement("a");
+  link.href = dataURL;
+  link.download = "scribble.jpg";
+  link.click();
+});
   </script>
 </body>
 </html>
