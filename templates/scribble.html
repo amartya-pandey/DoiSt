@@ -48,72 +48,103 @@
     </nav>
   </header>
   <h3 style="color: #33635d;">jU$t 5cr!bb|e your w@y through @by55...</h3>
-  <canvas id="scribbleCanvas" width="1400vh" height="800vh"></canvas>
+  <canvas id="scribbleCanvas" width="1400vh" height="750vh"></canvas>
   <br />
   <div id="colorPickerContainer"></div>
   <button id="clearCanvas">Clear</button>
-  <button id="save-scribble">Save</button> <!-- Save button -->
+  <button id="save-scribble">Save</button> 
 
   <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
   <script>
     const canvas = document.getElementById('scribbleCanvas');
-    const ctx = canvas.getContext('2d');
-    let isDrawing = false;
-    let currentColor = '#6a5acd'; 
-    const pickr = Pickr.create({
-      el: '#colorPickerContainer',
-      theme: 'nano', 
-      default: currentColor,
-      swatches: [
-        '#4effff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#000000', '#ffffff'
-      ],
-      components: {
-        preview: true,
-        opacity: true,
-        hue: true,
-        interaction: {
-          hex: true,
-          rgba: true,
-          input: true,
-          save: true
-        }
-      }
-    });
+const ctx = canvas.getContext('2d');
+let isDrawing = false;
+let currentColor = '#6a5acd';
 
-    // Updates the current color when the color picker changes
-    pickr.on('change', (color) => {
-      currentColor = color.toHEXA().toString(); // Get the selected color as a hex string
-    });
+// Set elements to display inline
+document.getElementById('colorPickerContainer').style.display = 'inline';
+document.getElementById('clearCanvas').style.display = 'inline';
+document.getElementById('save-scribble').style.display = 'inline';
 
-    canvas.addEventListener('mousedown', (e) => {
-      isDrawing = true;
-      ctx.beginPath();
-      ctx.moveTo(e.offsetX, e.offsetY);
-    });
+const pickr = Pickr.create({
+  el: '#colorPickerContainer',
+  theme: 'nano',
+  default: currentColor,
+  swatches: [
+    '#4effff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#000000', '#ffffff'
+  ],
+  components: {
+    preview: true,
+    opacity: true,
+    hue: true,
+    interaction: {
+      hex: true,
+      rgba: true,
+      input: true,
+      save: true
+    }
+  }
+});
 
-    canvas.addEventListener('mousemove', (e) => {
-      if (isDrawing) {
-        ctx.lineTo(e.offsetX, e.offsetY);
-        ctx.strokeStyle = currentColor; // Uses the selected color
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-    });
+// Updates the current color when the color picker changes
+pickr.on('change', (color) => {
+  currentColor = color.toHEXA().toString(); // Get the selected color as a hex string
+});
 
-    canvas.addEventListener('mouseup', () => {
-      isDrawing = false;
-      ctx.closePath();
-    });
+// Handle mouse and touch events for drawing
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mouseleave', stopDrawing);
 
-    canvas.addEventListener('mouseleave', () => {
-      isDrawing = false;
-    });
+canvas.addEventListener('touchstart', (e) => startDrawing(e, true));
+canvas.addEventListener('touchmove', (e) => draw(e, true));
+canvas.addEventListener('touchend', stopDrawing);
 
-    document.getElementById('clearCanvas').addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
+function startDrawing(e, isTouch = false) {
+  isDrawing = true;
+  ctx.beginPath();
+  const { x, y } = getPosition(e, isTouch);
+  ctx.moveTo(x, y);
+}
 
-    const saveButton = document.getElementById("save-scribble");
+function draw(e, isTouch = false) {
+  if (!isDrawing) return;
+  const { x, y } = getPosition(e, isTouch);
+  ctx.lineTo(x, y);
+  ctx.strokeStyle = currentColor; 
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function stopDrawing() {
+  isDrawing = false;
+  ctx.closePath();
+}
+
+function getPosition(e, isTouch) {
+  const rect = canvas.getBoundingClientRect();
+  if (isTouch) {
+    const touch = e.touches[0];
+    return {
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    };
+  } else {
+    return {
+      x: e.offsetX,
+      y: e.offsetY,
+    };
+  }
+}
+
+// Clear canvas
+document.getElementById('clearCanvas').addEventListener('click', () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+// Save canvas as JPG
+const saveButton = document.getElementById("save-scribble");
 saveButton.addEventListener("click", () => {
   const tempCanvas = document.createElement("canvas");
   const tempCtx = tempCanvas.getContext("2d");
@@ -122,7 +153,7 @@ saveButton.addEventListener("click", () => {
   tempCanvas.height = canvas.height;
 
   // Fill the background with black
-  tempCtx.fillStyle = "#000000";
+  tempCtx.fillStyle = "#000000"; 
   tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
   // Draw the original canvas content on top
